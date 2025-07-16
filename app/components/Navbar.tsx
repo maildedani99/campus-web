@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import { Bell, ChevronDown, LogOut, Settings, User } from "lucide-react"
 import { useNotifications } from "../context/NotificationsContext"
+import Link from "next/link"
 
 export default function Navbar() {
   const { toggle } = useNotifications()
@@ -27,13 +28,21 @@ export default function Navbar() {
   }, [])
 
   return (
-    <nav className="bg-bg text-white px-6 py-3 shadow-md relative z-50 flex items-center justify-between">
+    <nav className="fixed top-0 left-56 right-0 h-16 bg-bg text-white px-6 py-3 shadow-md z-50 flex items-center justify-between">
       {/* CENTRO: Menú principal centrado */}
       <ul className="flex gap-6 text-sm font-medium mx-auto">
-        <li className="hover:text-red-500 cursor-pointer">Inicio</li>
-        <li className="hover:text-red-500 cursor-pointer">Mis cursos</li>
-        <li className="hover:text-red-500 cursor-pointer">Calendario</li>
-        <li className="hover:text-red-500 cursor-pointer">Participantes</li>
+        <li className="hover:text-red-500 cursor-pointer">
+          <Link href="/campus/whiteBoard">Pizarra</Link>
+        </li>
+        <li className="hover:text-red-500 cursor-pointer">
+          <Link href="/campus/courses">Mis cursos</Link>
+        </li>
+        <li className="hover:text-red-500 cursor-pointer">
+          <Link href="/campus/calendar">Calendario</Link>
+        </li>
+        <li className="hover:text-red-500 cursor-pointer">
+          <Link href="/campus/participants">Participantes</Link>
+        </li>
         <li className="hover:text-red-500 cursor-pointer">Mensajes</li>
       </ul>
 

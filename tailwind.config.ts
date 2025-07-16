@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        caveat: ['var(--font-caveat)'],
+      },
      colors: {
       primary: '#e11d48',    // rojo corporativo
       bg: '#2a2a2a',          // gris oscuro más claro

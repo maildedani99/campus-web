@@ -50,7 +50,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="bg-background text-white w-56 min-h-screen px-4 py-6 text-[13px] space-y-6">
+<aside className="fixed top-0 left-0 z-40 bg-background text-white w-56 h-screen px-4 py-6 text-[13px] space-y-6">
       {/* Logo */}
       <div className="mb-2">
         <Image

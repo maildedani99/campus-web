@@ -10,7 +10,9 @@ export default function CampusLayout({ children }: { children: React.ReactNode }
         <Sidebar />
         <div className="flex-1 flex flex-col">
           <Navbar />
-          <main className="p-6">{children}</main>
+          <main className="ml-56 mt-16 p-6">
+            {children}
+          </main>
         </div>
       </div>
       <NotificationsPanel />
