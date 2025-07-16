@@ -71,7 +71,6 @@ export default function Sidebar() {
       <div className="space-y-4">
         {semanas.map((semana) => {
           const isOpen = open.includes(semana.title)
-          const allDone = semana.items.length > 0 && semana.items.every((item) => item.done)
 
           return (
             <div key={semana.title}>

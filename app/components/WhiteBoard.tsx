@@ -29,14 +29,18 @@ export default function Whiteboard() {
     setTasks([...tasks, trimmed])
     setNewTask("")
   }
+const toggleComplete = (task: string) => {
+  setCompleted((prev) => {
+    const copy = new Set(prev)
+    if (copy.has(task)) {
+      copy.delete(task)
+    } else {
+      copy.add(task)
+    }
+    return copy
+  })
+}
 
-  const toggleComplete = (task: string) => {
-    setCompleted((prev) => {
-      const copy = new Set(prev)
-      copy.has(task) ? copy.delete(task) : copy.add(task)
-      return copy
-    })
-  }
 
   const clearWhiteboard = () => {
     setTasks([])
