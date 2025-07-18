@@ -1,22 +1,31 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { MessageCircle, X } from "lucide-react"
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "Hola 👋 ¿En qué puedo ayudarte hoy?" }
+    {
+      role: "assistant",
+      content: "Hola 👋 soy iRomi, tu couch virtual. ¿En qué puedo ayudarte?",
+    },
   ])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
+  const chatRef = useRef<HTMLDivElement | null>(null)
+
+  // Scroll al último mensaje
+  useEffect(() => {
+    chatRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
 
   const handleSend = async () => {
     if (!input.trim()) return
 
     const userMessage = { role: "user", content: input }
-    const newMessages = [...messages, userMessage]
-    setMessages(newMessages)
+    const updatedMessages = [...messages, userMessage]
+    setMessages(updatedMessages)
     setInput("")
     setLoading(true)
 
@@ -24,17 +33,25 @@ export default function ChatWidget() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: updatedMessages }),
       })
 
       const data = await res.json()
+
       if (data?.content) {
-        setMessages([...newMessages, { role: "assistant", content: data.content }])
+        setMessages([...updatedMessages, { role: "assistant", content: data.content }])
       } else {
-        setMessages([...newMessages, { role: "assistant", content: "No se pudo obtener respuesta." }])
+        setMessages([...updatedMessages, {
+          role: "assistant",
+          content: "No se pudo obtener respuesta."
+        }])
       }
     } catch (error) {
-      setMessages([...newMessages, { role: "assistant", content: "Error al enviar mensaje." }])
+      console.error("Error al enviar el mensaje:", error)
+      setMessages([...updatedMessages, {
+        role: "assistant",
+        content: "Ha ocurrido un error. Inténtalo más tarde.",
+      }])
     } finally {
       setLoading(false)
     }
@@ -55,7 +72,7 @@ export default function ChatWidget() {
         <div className="w-80 h-[420px] bg-neutral-900 text-white rounded-lg shadow-lg flex flex-col overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-2 bg-primary">
-            <span className="font-semibold text-sm">Asistente Virtual</span>
+            <span className="font-semibold text-sm">Couch virtual</span>
             <button onClick={() => setOpen(false)}><X size={18} /></button>
           </div>
 
@@ -73,7 +90,10 @@ export default function ChatWidget() {
                 {msg.content}
               </div>
             ))}
-            {loading && <div className="text-left text-gray-400 text-xs">Pensando...</div>}
+            {loading && (
+              <div className="text-left text-gray-400 text-xs">Pensando...</div>
+            )}
+            <div ref={chatRef} />
           </div>
 
           {/* Input */}
