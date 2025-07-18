@@ -1,3 +1,4 @@
+import ChatWidget from "../components/ChatWidget";
 import Navbar from "../components/Navbar";
 import NotificationsPanel from "../components/NotificationsPanel";
 import Sidebar from "../components/Sidebar";
@@ -12,6 +13,7 @@ export default function CampusLayout({ children }: { children: React.ReactNode }
           <Navbar />
           <main className="ml-56 mt-16 p-6">
             {children}
+            <ChatWidget />
           </main>
         </div>
       </div>
