@@ -3,3 +3,9 @@
 @tailwind utilities;
 
 @import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+input:-webkit-autofill {
+  box-shadow: 0 0 0 1000px #2a2a2a inset !important;
+  -webkit-text-fill-color: #fff !important;
+  transition: background-color 9999s ease-in-out 0s;
+}

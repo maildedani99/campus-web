@@ -9,6 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^5.15.17",
+    "@mui/lab": "^5.0.0-alpha.125",
+    "@mui/material": "^5.15.17",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.6",
     "lucide-react": "^0.525.0",
