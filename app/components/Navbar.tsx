@@ -1,87 +1,135 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { Bell, ChevronDown, LogOut, Settings, User } from "lucide-react"
+import { useState } from "react"
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  IconButton,
+  Button,
+  Menu,
+  MenuItem,
+  Badge,
+} from "@mui/material"
 import { useNotifications } from "../context/NotificationsContext"
+import { Bell, ChevronDown, LogOut, Settings, User } from "lucide-react"
 import Link from "next/link"
 
 export default function Navbar() {
   const { toggle } = useNotifications()
-  const [profileOpen, setProfileOpen] = useState(false)
-  const profileRef = useRef<HTMLDivElement>(null)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
 
-  // Cierra el menú si se hace clic fuera
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        profileRef.current &&
-        !profileRef.current.contains(event.target as Node)
-      ) {
-        setProfileOpen(false)
-      }
-    }
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
 
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+  }
 
   return (
-    <nav className="fixed top-0 left-56 right-0 h-16 bg-bg text-white px-6 py-3 shadow-md z-50 flex items-center justify-between">
-      {/* CENTRO: Menú principal centrado */}
-      <ul className="flex gap-6 text-sm font-medium mx-auto">
-        <li className="hover:text-red-500 cursor-pointer">
-          <Link href="/campus/whiteBoard">Pizarra</Link>
-        </li>
-        <li className="hover:text-red-500 cursor-pointer">
-          <Link href="/campus/courses">Mis cursos</Link>
-        </li>
-        <li className="hover:text-red-500 cursor-pointer">
-          <Link href="/campus/calendar">Calendario</Link>
-        </li>
-        <li className="hover:text-red-500 cursor-pointer">
-          <Link href="/campus/participants">Participantes</Link>
-        </li>
-        <li className="hover:text-red-500 cursor-pointer">Mensajes</li>
-      </ul>
+    <AppBar
+      position="fixed"
+      sx={{
+        width: "calc(100% - 224px)", // Sidebar width (56 * 4)
+        left: 224,
+        backgroundColor: "#121212",
+        boxShadow: 2,
+        zIndex: 1201,
+      }}
+    >
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        {/* CENTRO: Navegación */}
+        <Box sx={{ display: "flex", gap: 3, mx: "auto" }}>
+          {[
+            { label: "Pizarra", href: "/campus/whiteBoard" },
+            { label: "Mis cursos", href: "/campus/courses" },
+            { label: "Calendario", href: "/campus/calendar" },
+            { label: "Participantes", href: "/campus/participants" },
+            { label: "Mensajes", href: "#" },
+          ].map(({ label, href }) => (
+            <Link key={label} href={href} passHref>
+              <Typography
+                variant="body2"
+                sx={{
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  letterSpacing: "0.5px",
+                  color: "#e0e0e0",
+                  transition: "color 0.3s",
+                  "&:hover": {
+                    color: "#ef4444",
+                  },
+                }}
+              >
+                {label}
+              </Typography>
+            </Link>
+          ))}
+        </Box>
 
-      {/* DERECHA: Perfil + Notificaciones */}
-      <div className="flex items-center gap-4">
-        {/* Perfil */}
-        <div className="relative" ref={profileRef}>
-          <button
-            onClick={() => setProfileOpen(!profileOpen)}
-            className="flex items-center gap-2 bg-neutral-800 px-4 py-2 rounded-full hover:bg-neutral-700"
+
+        {/* DERECHA: Perfil y notificaciones */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {/* Perfil */}
+          <Button
+            onClick={handleMenuClick}
+            variant="outlined"
+            size="small"
+            sx={{
+              color: "white",
+              textTransform: "none",
+              borderColor: "#333",
+              backgroundColor: "#2d2d2d",
+              "&:hover": {
+                backgroundColor: "#3a3a3a",
+              },
+            }}
+            startIcon={<User size={18} />}
+            endIcon={<ChevronDown size={16} />}
           >
-            <User size={18} />
-            <span className="text-sm">Perfil</span>
-            <ChevronDown size={16} />
-          </button>
+            Perfil
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleMenuClose}
+            PaperProps={{
+              sx: {
+                backgroundColor: "#2d2d2d",
+                color: "white",
+                minWidth: 180,
+              },
+            }}
+          >
+            <MenuItem onClick={handleMenuClose}>
+              <Settings size={16} style={{ marginRight: 8 }} /> Configuración
+            </MenuItem>
+            <MenuItem onClick={handleMenuClose}>
+              <LogOut size={16} style={{ marginRight: 8 }} /> Cerrar sesión
+            </MenuItem>
+          </Menu>
 
-          {profileOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-neutral-800 border border-neutral-700 rounded-md text-sm shadow-md">
-              <button className="w-full px-4 py-2 hover:bg-neutral-700 flex gap-2 items-center">
-                <Settings size={16} /> Configuración
-              </button>
-              <button className="w-full px-4 py-2 hover:bg-neutral-700 flex gap-2 items-center">
-                <LogOut size={16} /> Cerrar sesión
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Campanita de notificaciones */}
-        <button
-          onClick={toggle}
-          className="relative hover:text-red-500 transition"
-        >
-          <Bell size={25} />
-          <span className="absolute -top-1.5 -right-1 bg-red-600 text-[9px] h-4 w-4 rounded-full text-white flex items-center justify-center leading-none font-medium shadow-md">
-            2
-          </span>
-        </button>
-      </div>
-    </nav>
+          {/* Notificaciones */}
+          <IconButton onClick={toggle} sx={{ color: "white" }}>
+            <Badge
+              badgeContent={2}
+              color="error"
+              sx={{
+                "& .MuiBadge-badge": {
+                  fontSize: 10,
+                  height: 16,
+                  minWidth: 16,
+                },
+              }}
+            >
+              <Bell size={22} />
+            </Badge>
+          </IconButton>
+        </Box>
+      </Toolbar>
+    </AppBar>
   )
 }

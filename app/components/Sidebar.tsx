@@ -1,10 +1,25 @@
 "use client"
 
-import { useState } from "react"
-import { ChevronDown, ChevronRight } from "lucide-react"
+import {
+  Box,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+  Typography,
+  Divider,
+  Collapse,
+  ListItemIcon,
+} from "@mui/material"
 import Image from "next/image"
+import {
+  ExpandLess,
+  ExpandMore,
+  CheckCircle,
+  CancelRounded,
+} from "@mui/icons-material"
+import { useState } from "react"
 
-// Datos simulados
 const semanas = [
   {
     title: "Semana 1",
@@ -28,17 +43,27 @@ const semanas = [
   },
   {
     title: "Semana 3",
-    status: "pendiente",
-    items: [],
-  },
-  {
+    status: "actual",
+    items: [
+      { label: "Video explicativo", done: true },
+      { label: "Ejercicio", done: false },
+      { label: "Meditación", done: true },
+      { label: "Tarea", done: false },
+    ],
+  },{
     title: "Semana 4",
-    status: "bloqueada",
-    items: [],
+    status: "actual",
+    items: [
+      { label: "Video explicativo", done: false },
+      { label: "Ejercicio", done: false },
+      { label: "Meditación", done: false },
+      { label: "Tarea", done: false },
+    ],
   },
+ 
 ]
 
-export default function Sidebar() {
+export default function MuiSidebar() {
   const [open, setOpen] = useState<string[]>(["Semana 1", "Semana 2"])
 
   const toggleWeek = (title: string) => {
@@ -50,65 +75,83 @@ export default function Sidebar() {
   }
 
   return (
-<aside className="fixed top-0 left-0 z-40 bg-background text-white w-56 h-screen px-4 py-6 text-[13px] space-y-6">
-      {/* Logo */}
-      <div className="mb-2">
+    <Drawer
+      variant="permanent"
+      anchor="left"
+      sx={{
+        width: 240,
+        flexShrink: 0,
+        zIndex: (theme) => theme.zIndex.appBar + 1,
+        "& .MuiDrawer-paper": {
+          width: 240,
+          boxSizing: "border-box",
+          boxDecoration: "red",
+          backgroundColor: "#121212",
+          color: "#fff",
+          borderRight: "1px solid rgba(255,255,255,0.08)", // 🌟 Borde derecho sutil
+        },
+      }}
+    >
+      <Box sx={{ p: 2, textAlign: "center" }}>
         <Image
           src="/logo.png"
-          width={60}
-          height={60}
-          alt="Logo rebirth"
-          className="mx-auto"
+          alt="Logo"
+          width={100}
+          height={100}
+          className="mx-auto py-3"
         />
-      </div>
+        <Typography variant="subtitle2" color="primary" mt={1}>
+          21 Days – Julio 2025
+        </Typography>
+      </Box>
 
-      {/* Título */}
-      <div className="text-center">
-        <h2 className="font-bold text-primary text-[14px]">21 Days – Julio 2025</h2>
-      </div>
+      <Divider sx={{ borderColor: "rgba(255,255,255,0.1)" }} />
 
-      {/* Semanas */}
-      <div className="space-y-4">
+      <List>
         {semanas.map((semana) => {
           const isOpen = open.includes(semana.title)
-
           return (
-            <div key={semana.title}>
-              <button
-                onClick={() => toggleWeek(semana.title)}
-                className="flex items-center justify-between w-full text-left font-semibold"
-              >
-                <span className="flex items-center gap-1">
-                  {semana.title}
-                </span>
-                {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-              </button>
+            <Box key={semana.title}>
+              <ListItemButton onClick={() => toggleWeek(semana.title)}>
+                <ListItemText primary={semana.title} />
+                {isOpen ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
 
-              {isOpen && semana.items.length > 0 && (
-                <ul className="ml-2 mt-2 space-y-1 text-white/90 text-[13px]">
+              <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
                   {semana.items.map((item, i) => (
-                    <li key={i} className="relative pl-4">
-                      {item.done && (
-                        <span className="absolute left-0 top-[2px] text-green-500 text-[10px] font-bold">
-                          ✓
-                        </span>
-                      )}
-                      {item.label}
-                    </li>
+                    <ListItemButton key={i} sx={{ pl: 4 }}>
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 24,
+                          color: item.done ? "green" : "#ef4444",
+                        }}
+                      >
+                        {item.done ? (
+                          <CheckCircle fontSize="small" />
+                        ) : (
+                          <CancelRounded fontSize="small" />
+                        )}
+                      </ListItemIcon>
+                      <ListItemText primary={item.label} />
+                    </ListItemButton>
                   ))}
-                </ul>
-              )}
-            </div>
+                </List>
+              </Collapse>
+            </Box>
           )
         })}
-      </div>
+      </List>
 
-      {/* Extra sections */}
-      <div className="mt-8 space-y-1 text-white/80 text-[13px] border-t border-white/10 pt-4">
-        <div className="hover:text-primary cursor-pointer">Encuestas</div>
-        <div className="hover:text-primary cursor-pointer">Material adicional</div>
-      </div>
-    </aside>
+      <Divider sx={{ borderColor: "rgba(255,255,255,0.1)", mt: 2 }} />
+      <List>
+        <ListItemButton>
+          <ListItemText primary="Encuestas" />
+        </ListItemButton>
+        <ListItemButton>
+          <ListItemText primary="Material adicional" />
+        </ListItemButton>
+      </List>
+    </Drawer>
   )
 }
-  

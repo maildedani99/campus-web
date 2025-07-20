@@ -1,6 +1,16 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import {
+  Box,
+  IconButton,
+  Typography,
+  Paper,
+  TextField,
+  Button,
+  CircularProgress,
+  Fade,
+} from "@mui/material"
 import { MessageCircle, X } from "lucide-react"
 
 export default function ChatWidget() {
@@ -15,7 +25,6 @@ export default function ChatWidget() {
   const [loading, setLoading] = useState(false)
   const chatRef = useRef<HTMLDivElement | null>(null)
 
-  // Scroll al último mensaje
   useEffect(() => {
     chatRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
@@ -38,86 +47,155 @@ export default function ChatWidget() {
 
       const data = await res.json()
 
-      if (data?.content) {
-        setMessages([...updatedMessages, { role: "assistant", content: data.content }])
-      } else {
-        setMessages([...updatedMessages, {
+      setMessages([
+        ...updatedMessages,
+        {
           role: "assistant",
-          content: "No se pudo obtener respuesta."
-        }])
-      }
+          content: data?.content || "No se pudo obtener respuesta.",
+        },
+      ])
     } catch (error) {
-      console.error("Error al enviar el mensaje:", error)
-      setMessages([...updatedMessages, {
-        role: "assistant",
-        content: "Ha ocurrido un error. Inténtalo más tarde.",
-      }])
+        console.error("Error al enviar el mensaje:", error)
+      setMessages([
+        ...updatedMessages,
+        {
+          role: "assistant",
+          content: "Ha ocurrido un error. Inténtalo más tarde.",
+        },
+      ])
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <Box sx={{ position: "fixed", bottom: 24, right: 24, zIndex: 9999 }}>
       {!open && (
-        <button
-          onClick={() => setOpen(true)}
-          className="bg-primary text-white p-3 rounded-full shadow-lg hover:bg-primary/80 transition"
-        >
-          <MessageCircle />
-        </button>
+        <Fade in={!open}>
+          <IconButton
+            onClick={() => setOpen(true)}
+            sx={{
+              backgroundColor: "#ef4444",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#dc2626",
+              },
+              boxShadow: 4,
+            }}
+            size="large"
+          >
+            <MessageCircle size={20} />
+          </IconButton>
+        </Fade>
       )}
 
       {open && (
-        <div className="w-80 h-[420px] bg-neutral-900 text-white rounded-lg shadow-lg flex flex-col overflow-hidden">
+        <Paper
+          elevation={6}
+          sx={{
+            width: 360,
+            height: 440,
+            display: "flex",
+            flexDirection: "column",
+            bgcolor: "#1e1e1e",
+            color: "#fff",
+            borderRadius: 2,
+            overflow: "hidden",
+          }}
+        >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-2 bg-primary">
-            <span className="font-semibold text-sm">Couch virtual</span>
-            <button onClick={() => setOpen(false)}><X size={18} /></button>
-          </div>
+          <Box
+            sx={{
+              px: 2,
+              py: 1.5,
+              bgcolor: "#ef4444",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="body2" fontWeight="bold">
+              Couch virtual
+            </Typography>
+            <IconButton size="small" onClick={() => setOpen(false)} sx={{ color: "#fff" }}>
+              <X size={18} />
+            </IconButton>
+          </Box>
 
-          {/* Chat */}
-          <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2 text-sm">
+          {/* Chat body */}
+          <Box
+            sx={{
+              flex: 1,
+              px: 2,
+              py: 1.5,
+              overflowY: "auto",
+              fontSize: "0.85rem",
+              "&::-webkit-scrollbar": { width: 6 },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "#444",
+                borderRadius: 2,
+              },
+            }}
+          >
             {messages.map((msg, idx) => (
-              <div
+              <Box
                 key={idx}
-                className={`whitespace-pre-line ${
-                  msg.role === "user"
-                    ? "text-right text-white"
-                    : "text-left text-green-400"
-                }`}
+                sx={{
+                  textAlign: msg.role === "user" ? "right" : "left",
+                  color: msg.role === "user" ? "#fff" : "#6ee7b7",
+                  whiteSpace: "pre-line",
+                  mb: 1,
+                }}
               >
                 {msg.content}
-              </div>
+              </Box>
             ))}
             {loading && (
-              <div className="text-left text-gray-400 text-xs">Pensando...</div>
+              <Typography variant="caption" color="gray">
+                Pensando...
+              </Typography>
             )}
             <div ref={chatRef} />
-          </div>
+          </Box>
 
           {/* Input */}
-          <div className="border-t border-white/10 p-2">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                className="flex-1 px-3 py-1 rounded bg-neutral-800 text-white text-sm focus:outline-none"
+          <Box sx={{ p: 1.5, borderTop: "1px solid #333" }}>
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
                 placeholder="Escribe tu mensaje..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                sx={{
+                  input: {
+                    color: "#fff",
+                    backgroundColor: "#2a2a2a",
+                  },
+                  fieldset: {
+                    borderColor: "#444",
+                  },
+                }}
               />
-              <button
+              <Button
+                variant="contained"
                 onClick={handleSend}
                 disabled={loading}
-                className="bg-primary px-3 py-1 rounded text-sm hover:bg-primary/80"
+                sx={{
+                  bgcolor: "#ef4444",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  "&:hover": { bgcolor: "#dc2626" },
+                }}
               >
-                Enviar
-              </button>
-            </div>
-          </div>
-        </div>
+                {loading ? <CircularProgress size={16} color="inherit" /> : "Enviar"}
+              </Button>
+            </Box>
+          </Box>
+        </Paper>
       )}
-    </div>
+    </Box>
   )
 }
