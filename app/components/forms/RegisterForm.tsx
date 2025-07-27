@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -10,8 +10,13 @@ import {
   MenuItem,
   TextField,
   Typography,
-} from "@mui/material"
-import Image from "next/image"
+  Snackbar,
+  Alert,
+} from "@mui/material";
+import Image from "next/image";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY!);
 
 const initialState = {
   nombre: "",
@@ -26,42 +31,72 @@ const initialState = {
   pais: "España",
   dni: "",
   termsAccepted: false,
-}
+};
 
 export default function RegisterForm() {
-  const [form, setForm] = useState(initialState)
+  const [form, setForm] = useState(initialState);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "error" as "error" | "success",
+  });
+
+  const showSnackbar = (message: string, severity: "error" | "success" = "error") => {
+    setSnackbar({ open: true, message, severity });
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target
-    setForm({
-      ...form,
-      [name]: type === "checkbox" ? checked : value,
-    })
-  }
+    const { name, value, type, checked } = e.target;
+    setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
+
     if (form.password !== form.repeatPassword) {
-      alert("Las contraseñas no coinciden")
-      return
+      showSnackbar("Las contraseñas no coinciden");
+      return;
     }
+
     if (!form.termsAccepted) {
-      alert("Debes aceptar los términos y condiciones")
-      return
+      showSnackbar("Debes aceptar los términos y condiciones");
+      return;
     }
 
     try {
-     const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROUTE}/auth/register`, {
+      // 1. Registro
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_ROUTE}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
-      })
-      const data = await res.json()
-      console.log("Registrado:", data)
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        showSnackbar(error.message || "Error al registrar");
+        return;
+      }
+
+      // 2. Crear sesión de pago
+      const paymentRes = await fetch(`${process.env.NEXT_PUBLIC_API_ROUTE}/payment/checkout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: 140 }),
+      });
+
+      const paymentData = await paymentRes.json();
+      if (!paymentData.url) {
+        showSnackbar("No se pudo iniciar el pago");
+        return;
+      }
+
+      // 3. Redirigir a Stripe
+      window.location.href = paymentData.url;
     } catch (error) {
-      console.error("Error al registrar:", error)
+      console.error("Error:", error);
+      showSnackbar("Error inesperado en el registro o el pago");
     }
-  }
+  };
 
   return (
     <Box
@@ -78,29 +113,22 @@ export default function RegisterForm() {
       <Box
         sx={{
           width: "100%",
-          maxWidth: {
-            xs: "100%",
-            sm: 600,
-            md: 700,
-            lg: 800,
-          },
+          maxWidth: { xs: "100%", sm: 600, md: 700, lg: 800 },
           backgroundColor: "#1e1e1e",
           borderRadius: 3,
           p: { xs: 3, sm: 4 },
         }}
       >
-        {/* Logo y Título */}
+        {/* Logo y título */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
-          <Image src="/logo.png" alt="Logo Rebirth" width={100} height={100} className="mx-auto" />
+          <Image src="/logo.png" alt="Logo Rebirth" width={100} height={100} />
         </Box>
-          <Typography variant="h6" sx={{ color: "#fff", fontWeight: "bold"  }}>
-            Registro de usuario
-          </Typography>
+        <Typography variant="h6" sx={{ color: "#fff", fontWeight: "bold" }}>
+          Registro de usuario
+        </Typography>
 
-        {/* Formulario */}
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            {/* Nombre y Apellidos */}
             <Grid item xs={12} sm={6}>
               <TextField name="nombre" label="Nombre" fullWidth required value={form.nombre} onChange={handleChange}
                 InputLabelProps={{ style: { color: "#ccc" } }} InputProps={{ style: { color: "#fff", backgroundColor: "#2a2a2a" } }} />
@@ -110,13 +138,11 @@ export default function RegisterForm() {
                 InputLabelProps={{ style: { color: "#ccc" } }} InputProps={{ style: { color: "#fff", backgroundColor: "#2a2a2a" } }} />
             </Grid>
 
-            {/* Email */}
             <Grid item xs={12}>
               <TextField name="email" label="Correo electrónico" type="email" fullWidth required value={form.email} onChange={handleChange}
                 InputLabelProps={{ style: { color: "#ccc" } }} InputProps={{ style: { color: "#fff", backgroundColor: "#2a2a2a" } }} />
             </Grid>
 
-            {/* Contraseña y repetir */}
             <Grid item xs={12} sm={6}>
               <TextField name="password" label="Contraseña" type="password" fullWidth required value={form.password} onChange={handleChange}
                 InputLabelProps={{ style: { color: "#ccc" } }} InputProps={{ style: { color: "#fff", backgroundColor: "#2a2a2a" } }} />
@@ -126,7 +152,6 @@ export default function RegisterForm() {
                 InputLabelProps={{ style: { color: "#ccc" } }} InputProps={{ style: { color: "#fff", backgroundColor: "#2a2a2a" } }} />
             </Grid>
 
-            {/* Teléfono y DNI */}
             <Grid item xs={12} sm={6}>
               <TextField name="telefono" label="Teléfono" fullWidth required value={form.telefono} onChange={handleChange}
                 InputLabelProps={{ style: { color: "#ccc" } }} InputProps={{ style: { color: "#fff", backgroundColor: "#2a2a2a" } }} />
@@ -136,13 +161,11 @@ export default function RegisterForm() {
                 InputLabelProps={{ style: { color: "#ccc" } }} InputProps={{ style: { color: "#fff", backgroundColor: "#2a2a2a" } }} />
             </Grid>
 
-            {/* Dirección */}
             <Grid item xs={12}>
               <TextField name="direccion" label="Dirección" fullWidth required value={form.direccion} onChange={handleChange}
                 InputLabelProps={{ style: { color: "#ccc" } }} InputProps={{ style: { color: "#fff", backgroundColor: "#2a2a2a" } }} />
             </Grid>
 
-            {/* Ciudad y CP */}
             <Grid item xs={12} sm={6}>
               <TextField name="ciudad" label="Ciudad" fullWidth required value={form.ciudad} onChange={handleChange}
                 InputLabelProps={{ style: { color: "#ccc" } }} InputProps={{ style: { color: "#fff", backgroundColor: "#2a2a2a" } }} />
@@ -152,7 +175,6 @@ export default function RegisterForm() {
                 InputLabelProps={{ style: { color: "#ccc" } }} InputProps={{ style: { color: "#fff", backgroundColor: "#2a2a2a" } }} />
             </Grid>
 
-            {/* País */}
             <Grid item xs={12}>
               <TextField name="pais" label="País" select fullWidth value={form.pais} onChange={handleChange}
                 InputLabelProps={{ style: { color: "#ccc" } }} InputProps={{ style: { color: "#fff", backgroundColor: "#2a2a2a" } }}>
@@ -162,7 +184,6 @@ export default function RegisterForm() {
               </TextField>
             </Grid>
 
-            {/* Aceptar términos */}
             <Grid item xs={12}>
               <FormControlLabel
                 control={
@@ -181,7 +202,6 @@ export default function RegisterForm() {
               />
             </Grid>
 
-            {/* Botón */}
             <Grid item xs={12}>
               <Button type="submit" variant="contained" fullWidth sx={{
                 mt: 2,
@@ -190,12 +210,29 @@ export default function RegisterForm() {
                 fontWeight: "bold",
                 ":hover": { backgroundColor: "#dc2626" },
               }}>
-                Registrarse
+                Registrarse y pagar
               </Button>
             </Grid>
           </Grid>
         </form>
+
+        {/* Snackbar para feedback */}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={4000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
+            severity={snackbar.severity}
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
       </Box>
     </Box>
-  )
+  );
 }
