@@ -8,16 +8,19 @@ import { ExpandLess, ExpandMore, CheckCircle, CancelRounded } from "@mui/icons-m
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
-import { mockSemanas } from "../data/mockSemanas"
-import { drawerWidth } from "../constants/layout"
-import RoleSwitcher from "./RoleSwitcher"
+import { mockSemanas } from "@/app/data/mockSemanas"
+import { drawerWidth } from "@/app/constants/layout"
 
 const semanas = mockSemanas
 
-export default function Sidebar() {
+type Role = "client" | "teacher" | "admin"
+
+export default function SidebarClient({ role = "client" }: { role?: Role }) {
   const [open, setOpen] = useState<string[]>(["Semana 1", "Semana 2"])
   const toggleWeek = (t: string) =>
     setOpen(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])
+
+  const isClient = role === "client"
 
   return (
     <Drawer
@@ -37,10 +40,14 @@ export default function Sidebar() {
         <Typography variant="caption" color="primary" sx={{ display:"block", mt: 1 }}>
           21 Days – Julio 2025
         </Typography>
+        <Typography variant="caption" sx={{ opacity: 0.7 }}>
+          {role.toUpperCase()}
+        </Typography>
       </Box>
-      <RoleSwitcher />
+
       <Divider sx={{ borderColor: "rgba(255,255,255,0.1)" }} />
 
+      {/* Bloque de semanas -> solo enlaza en CLIENT */}
       <List>
         {semanas.map(semana => {
           const isOpen = open.includes(semana.title)
@@ -53,16 +60,26 @@ export default function Sidebar() {
 
               <Collapse in={isOpen} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                  {semana.items.map(item => (
-                    <Link key={item.id} href={`/campus/item/${item.id}`} passHref>
-                      <ListItemButton component="a" sx={{ pl: 4 }}>
+                  {semana.items.map(item => {
+                    const href = `/campus/client/item/${item.id}` 
+                    return isClient ? (
+                      <Link key={item.id} href={href} passHref>
+                        <ListItemButton component="a" sx={{ pl: 4 }}>
+                          <ListItemIcon sx={{ minWidth: 24, color: item.done ? "green" : "#ef4444" }}>
+                            {item.done ? <CheckCircle fontSize="small" /> : <CancelRounded fontSize="small" />}
+                          </ListItemIcon>
+                          <ListItemText primary={item.label} />
+                        </ListItemButton>
+                      </Link>
+                    ) : (
+                      <ListItemButton key={item.id} sx={{ pl: 4 }} disabled>
                         <ListItemIcon sx={{ minWidth: 24, color: item.done ? "green" : "#ef4444" }}>
                           {item.done ? <CheckCircle fontSize="small" /> : <CancelRounded fontSize="small" />}
                         </ListItemIcon>
                         <ListItemText primary={item.label} />
                       </ListItemButton>
-                    </Link>
-                  ))}
+                    )
+                  })}
                 </List>
               </Collapse>
             </Box>
@@ -71,6 +88,8 @@ export default function Sidebar() {
       </List>
 
       <Divider sx={{ borderColor: "rgba(255,255,255,0.1)", mt: 2 }} />
+
+      {/* Extras (puedes filtrar por rol si quieres) */}
       <List>
         <ListItemButton><ListItemText primary="Encuestas" /></ListItemButton>
         <ListItemButton><ListItemText primary="Material adicional" /></ListItemButton>

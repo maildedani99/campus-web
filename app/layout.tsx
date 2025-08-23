@@ -1,18 +1,31 @@
-// app/layout.tsx
 import './globals.css'
 import type { ReactNode } from 'react'
-import { Poppins } from "next/font/google"
+import { Nunito_Sans, Poppins, Roboto } from "next/font/google"
+import AppThemeProvider from './theme/AppThemeProvider';
 
-const poppins = Poppins({
+
+
+export const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-})
+  weight: ["400", "500", "600", "700"], 
+  variable: "--font-poppins", 
+});
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+});
+
+const nunitoSans = Nunito_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+});
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es">
-      <body className={poppins.className}>{children}</body>
+      <AppThemeProvider>
+        <body className={nunitoSans.className}>{children}</body>
+      </AppThemeProvider>
     </html>
   )
 }

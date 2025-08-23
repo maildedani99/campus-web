@@ -1,14 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { Box, Typography, TextField, Button } from "@mui/material"
+import { Box, Paper, Typography, TextField, Button } from "@mui/material"
 
 export default function TextItem() {
   const [response, setResponse] = useState("")
 
   const handleSave = () => {
     if (!response.trim()) return
-    // Lógica de guardado aquí (API call, etc.)
+    // Aquí iría la lógica real (API call, etc.)
     console.log("Respuesta guardada:", response)
   }
 
@@ -18,49 +18,51 @@ export default function TextItem() {
         maxWidth: 700,
         mx: "auto",
         mt: 6,
-        p: 4,
-        backgroundColor: "#1f1f1f",
-        borderRadius: 2,
-        boxShadow: 3,
+        px: 2,
       }}
     >
-      <Typography variant="h6" gutterBottom>
-        Reflexión escrita
-      </Typography>
-      <Typography variant="body2" color="gray" gutterBottom>
-        ¿Cómo te has sentido esta semana? ¿Qué aprendizajes destacarías?
-      </Typography>
-
-      <TextField
-        multiline
-        minRows={5}
-        fullWidth
-        value={response}
-        onChange={(e) => setResponse(e.target.value)}
-        placeholder="Escribe tu respuesta aquí..."
+      <Paper
+        elevation={3}
         sx={{
-          mt: 2,
-          mb: 3,
-          backgroundColor: "#2a2a2a",
-          color: "#fff",
-          input: { color: "white" },
-          textarea: { color: "white" },
-          "& .MuiOutlinedInput-root": {
-            "& fieldset": { borderColor: "#444" },
-            "&:hover fieldset": { borderColor: "#888" },
-            "&.Mui-focused fieldset": { borderColor: "#1976d2" },
-          },
+          p: 4,
+          borderRadius: 2,
         }}
-      />
-
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleSave}
-        sx={{ textTransform: "none" }}
       >
-        Guardar respuesta
-      </Button>
+        {/* Título */}
+        <Typography variant="h6" fontWeight="bold" gutterBottom>
+          Reflexión escrita
+        </Typography>
+
+        {/* Enunciado */}
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ mb: 3 }}
+        >
+          ¿Cómo te has sentido esta semana? ¿Qué aprendizajes destacarías?
+        </Typography>
+
+        {/* Campo de texto */}
+        <TextField
+          fullWidth
+          multiline
+          minRows={5}
+          value={response}
+          onChange={(e) => setResponse(e.target.value)}
+          placeholder="Escribe tu respuesta aquí..."
+          variant="outlined"
+          sx={{ mb: 3 }}
+        />
+
+        {/* Botón */}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSave}
+        >
+          Guardar respuesta
+        </Button>
+      </Paper>
     </Box>
   )
 }

@@ -1,16 +1,6 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import {
-  Box,
-  IconButton,
-  Typography,
-  Paper,
-  TextField,
-  Button,
-  CircularProgress,
-  Fade,
-} from "@mui/material"
 import { MessageCircle, X } from "lucide-react"
 
 export default function ChatWidget() {
@@ -18,7 +8,7 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "Hola 👋 soy iRomi, tu couch virtual. ¿En qué puedo ayudarte?",
+      content: "Hola 👋 soy iRomi, tu coach virtual. ¿En qué puedo ayudarte?",
     },
   ])
   const [input, setInput] = useState("")
@@ -55,7 +45,7 @@ export default function ChatWidget() {
         },
       ])
     } catch (error) {
-        console.error("Error al enviar el mensaje:", error)
+      console.error("Error al enviar el mensaje:", error)
       setMessages([
         ...updatedMessages,
         {
@@ -69,133 +59,64 @@ export default function ChatWidget() {
   }
 
   return (
-    <Box sx={{ position: "fixed", bottom: 24, right: 24, zIndex: 9999 }}>
+    <div className="fixed bottom-6 right-6 z-[9999]">
       {!open && (
-        <Fade in={!open}>
-          <IconButton
-            onClick={() => setOpen(true)}
-            sx={{
-              backgroundColor: "#ef4444",
-              color: "#fff",
-              "&:hover": {
-                backgroundColor: "#dc2626",
-              },
-              boxShadow: 4,
-            }}
-            size="large"
-          >
-            <MessageCircle size={20} />
-          </IconButton>
-        </Fade>
+        <button
+          onClick={() => setOpen(true)}
+          className="p-3 rounded-full bg-red-500 text-white shadow-lg hover:bg-red-600 transition"
+        >
+          <MessageCircle size={20} />
+        </button>
       )}
 
       {open && (
-        <Paper
-          elevation={6}
-          sx={{
-            width: 360,
-            height: 440,
-            display: "flex",
-            flexDirection: "column",
-            bgcolor: "#1e1e1e",
-            color: "#fff",
-            borderRadius: 2,
-            overflow: "hidden",
-          }}
-        >
+        <div className="w-80 h-[440px] flex flex-col bg-[#1e1e1e] text-white rounded-lg shadow-lg overflow-hidden">
           {/* Header */}
-          <Box
-            sx={{
-              px: 2,
-              py: 1.5,
-              bgcolor: "#ef4444",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="body2" fontWeight="bold">
-              Couch virtual
-            </Typography>
-            <IconButton size="small" onClick={() => setOpen(false)} sx={{ color: "#fff" }}>
+          <div className="flex justify-between items-center px-3 py-2 bg-red-500">
+            <span className="text-sm font-bold">Coach virtual</span>
+            <button onClick={() => setOpen(false)} className="text-white hover:text-gray-200">
               <X size={18} />
-            </IconButton>
-          </Box>
+            </button>
+          </div>
 
           {/* Chat body */}
-          <Box
-            sx={{
-              flex: 1,
-              px: 2,
-              py: 1.5,
-              overflowY: "auto",
-              fontSize: "0.85rem",
-              "&::-webkit-scrollbar": { width: 6 },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "#444",
-                borderRadius: 2,
-              },
-            }}
-          >
+          <div className="flex-1 px-3 py-2 overflow-y-auto text-sm scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
             {messages.map((msg, idx) => (
-              <Box
+              <div
                 key={idx}
-                sx={{
-                  textAlign: msg.role === "user" ? "right" : "left",
-                  color: msg.role === "user" ? "#fff" : "#6ee7b7",
-                  whiteSpace: "pre-line",
-                  mb: 1,
-                }}
+                className={`mb-1 whitespace-pre-line ${
+                  msg.role === "user" ? "text-right text-white" : "text-left text-emerald-300"
+                }`}
               >
                 {msg.content}
-              </Box>
+              </div>
             ))}
-            {loading && (
-              <Typography variant="caption" color="gray">
-                Pensando...
-              </Typography>
-            )}
+            {loading && <span className="text-xs text-gray-400">Pensando...</span>}
             <div ref={chatRef} />
-          </Box>
+          </div>
 
           {/* Input */}
-          <Box sx={{ p: 1.5, borderTop: "1px solid #333" }}>
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
+          <div className="p-2 border-t border-gray-700">
+            <div className="flex gap-2">
+              <input
+                type="text"
                 placeholder="Escribe tu mensaje..."
+                className="flex-1 text-sm px-3 py-2 rounded-md bg-[#2a2a2a] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                sx={{
-                  input: {
-                    color: "#fff",
-                    backgroundColor: "#2a2a2a",
-                  },
-                  fieldset: {
-                    borderColor: "#444",
-                  },
-                }}
               />
-              <Button
-                variant="contained"
+              <button
                 onClick={handleSend}
                 disabled={loading}
-                sx={{
-                  bgcolor: "#ef4444",
-                  color: "#fff",
-                  fontWeight: "bold",
-                  "&:hover": { bgcolor: "#dc2626" },
-                }}
+                className="px-4 py-2 bg-red-500 text-white text-sm font-bold rounded-md hover:bg-red-600 disabled:opacity-50"
               >
-                {loading ? <CircularProgress size={16} color="inherit" /> : "Enviar"}
-              </Button>
-            </Box>
-          </Box>
-        </Paper>
+                {loading ? "..." : "Enviar"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
-    </Box>
+    </div>
   )
 }

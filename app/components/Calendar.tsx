@@ -10,14 +10,6 @@ import { format, parse, startOfWeek, getDay } from "date-fns"
 import { es } from "date-fns/locale"
 import "react-big-calendar/lib/css/react-big-calendar.css"
 
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Paper,
-  Typography,
-} from "@mui/material"
-
 // Locales
 const locales = { es }
 
@@ -54,41 +46,30 @@ export default function CalendarComponent() {
   const [view, setView] = useState<keyof typeof Views>("month")
 
   return (
-    <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
+    <div className="rounded-xl shadow-md bg-white p-4">
       {/* Encabezado y botones */}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Typography variant="h6">Mi Calendario</Typography>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold text-gray-800">Mi Calendario</h2>
 
-        <ButtonGroup size="small" variant="outlined">
+        <div className="flex gap-2">
           {Object.entries(viewLabels).map(([key, label]) => (
-            <Button
+            <button
               key={key}
               onClick={() => setView(key as keyof typeof Views)}
-              variant={view === key ? "contained" : "outlined"}
-              color={view === key ? "primary" : "inherit"}
+              className={`px-3 py-1.5 text-sm rounded-md border transition ${
+                view === key
+                  ? "bg-blue-500 text-white border-blue-500"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+              }`}
             >
               {label}
-            </Button>
+            </button>
           ))}
-        </ButtonGroup>
-      </Box>
+        </div>
+      </div>
 
       {/* Calendario */}
-      <Box
-        sx={{
-          borderRadius: 2,
-          overflow: "hidden",
-          "& .rbc-calendar": {
-            fontSize: "13px",
-            backgroundColor: "#fff",
-          },
-        }}
-      >
+      <div className="rounded-lg overflow-hidden bg-white">
         <BigCalendar
           localizer={localizer}
           events={events}
@@ -102,7 +83,7 @@ export default function CalendarComponent() {
           popup
           culture="es"
         />
-      </Box>
-    </Paper>
+      </div>
+    </div>
   )
 }

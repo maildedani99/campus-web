@@ -2,4 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@import 'react-big-calendar/lib/css/react-big-calendar.css';
+/* Fondo + tipografía base del app */
+html, body {
+  @apply bg-background text-text;
+}
+
+/* Scrollbar discreta opcional */
+*::-webkit-scrollbar { width: 8px; }
+*::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 8px; }

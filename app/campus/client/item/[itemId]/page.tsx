@@ -1,5 +1,4 @@
 "use client"
-// app/campus/item/[itemId]/page.tsx
 import { useParams } from "next/navigation"
 import VideoItem from "@/app/components/items/VideoItem"
 import AudioItem from "@/app/components/items/AudioItem"

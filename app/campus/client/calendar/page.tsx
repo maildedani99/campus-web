@@ -1,9 +1,5 @@
 import PageHeader from "@/app/components/PageHeader"
-import dynamic from "next/dynamic"
-
-const Calendar = dynamic(() => import("../../components/Calendar"), {
-  ssr: false, // IMPORTANTE: Evita que se cargue del lado del servidor
-})
+import { Calendar } from "lucide-react"
 
 export default function CalendarPage() {
   return (

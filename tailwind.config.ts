@@ -1,19 +1,27 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from "tailwindcss"
+import flowbitePlugin from "flowbite/plugin"
+
+const config: Config = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx}",
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/flowbite-react/lib/esm/**/*.js",
+    "./node_modules/flowbite/**/*.js",
   ],
   theme: {
     extend: {
-     
-      
-     colors: {
-      primary: '#e11d48',    // rojo corporativo
-      bg: '#2a2a2a',          // gris oscuro más claro
+       fontFamily: {
+        sans: ['"Nunito Sans"', "sans-serif"],
+      },
+      colors: {
+        primary: "#ef4444",
+        surface: "#202120",
+        background: "#0f0f10",
+        text: "#ffffff",
+        subtitle: "#9ca3af",
       },
     },
   },
-  plugins: [],
+  plugins: [flowbitePlugin],
 }
+export default config
