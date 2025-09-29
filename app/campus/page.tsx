@@ -1,8 +1,18 @@
-export default function CampusHome() {
+'use client';
+
+import RequireActive from "../auth/RequireActive";
+import RequireAuth from "../auth/RequireAuth";
+
+
+export default function DashboardPage() {
   return (
-    <div>
-      <h1 className="text-2xl font-bold">Bienvenido al Campus</h1>
-      <p className="mt-4 text-gray-600">Selecciona una opción en el menú lateral para comenzar.</p>
-    </div>
-  )
+    <RequireAuth>
+<RequireActive inactivePath="/campus/inactive">
+        <div style={{ padding: 24, color: '#fff' }}>
+          <h1>Dashboard</h1>
+          <p>Contenido del campus…</p>
+        </div>
+      </RequireActive>
+    </RequireAuth>
+  );
 }

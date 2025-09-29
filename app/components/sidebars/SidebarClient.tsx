@@ -2,7 +2,8 @@
 
 import {
   Box, Drawer, List, ListItemButton, ListItemText,
-  Divider, Collapse, ListItemIcon, Typography
+  Divider, Collapse, ListItemIcon, Typography,
+  Button
 } from "@mui/material"
 import { ExpandLess, ExpandMore, CheckCircle, CancelRounded } from "@mui/icons-material"
 import Image from "next/image"
@@ -10,12 +11,14 @@ import Link from "next/link"
 import { useState } from "react"
 import { mockSemanas } from "@/app/data/mockSemanas"
 import { drawerWidth } from "@/app/constants/layout"
+import { LogOutIcon } from "lucide-react"
 
 const semanas = mockSemanas
 
 type Role = "client" | "teacher" | "admin"
 
-export default function SidebarClient({ role = "client" }: { role?: Role }) {
+export default function SidebarClient(  { role = "client", handleLogout = () => {} }: { role?: Role; handleLogout?: () => void }
+) {
   const [open, setOpen] = useState<string[]>(["Semana 1", "Semana 2"])
   const toggleWeek = (t: string) =>
     setOpen(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])
@@ -94,6 +97,22 @@ export default function SidebarClient({ role = "client" }: { role?: Role }) {
         <ListItemButton><ListItemText primary="Encuestas" /></ListItemButton>
         <ListItemButton><ListItemText primary="Material adicional" /></ListItemButton>
       </List>
+      <Box sx={{ flexGrow: 1 }} />
+              <Box sx={{ p: 2 }}>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  startIcon={<LogOutIcon />}
+                  onClick={handleLogout}
+                  sx={{
+                    color: '#eee',
+                    borderColor: '#333',
+                    ':hover': { borderColor: '#444', bgcolor: '#1a1a1a' },
+                  }}
+                >
+                  Salir
+                </Button>
+              </Box>
     </Drawer>
   )
 }
