@@ -55,7 +55,7 @@ export default function LoginFormCampus() {
       if (!token) throw new Error('No se recibió token del login');
 
       // 2. pedir usuario autenticado
-      const meRes = await fetcher(['auth/me', 'POST', null, token]);
+      const meRes = await fetcher(['auth/me', 'GET', null, token]);
       const user = meRes?.data ?? meRes;
       if (!user) throw new Error('No se pudo obtener el usuario');
 
