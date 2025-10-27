@@ -5,6 +5,7 @@ import { COURSE_TEMPLATE } from '../templates/course';
 import { useAuthSession } from '@/app/auth/useAuthSession';
 import ContractTemplateRenderer from '@/app/components/ContractTemplateRenderer';
 import ContractAcceptBlock from '@/app/components/ContractAcceptBlock';
+import Modal from '@/app/components/Modal';
 
 export default function CourseContractPage() {
   const { user } = useAuthSession();
@@ -47,11 +48,13 @@ export default function CourseContractPage() {
   };
 
   return (
+    <Modal>
     <Stack spacing={2} sx={{ p: 3 }}>
       <Typography variant="h6">Contrato del curso</Typography>
       <ContractTemplateRenderer template={COURSE_TEMPLATE} data={data} />
       <ContractAcceptBlock onAccepted={() => alert("Se ha aceptado el contrato")} />
 
     </Stack>
+    </Modal>
   );
 }

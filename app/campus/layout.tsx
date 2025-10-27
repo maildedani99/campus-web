@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
@@ -26,13 +26,19 @@ type User = {
 const DRAWER_WIDTH = 240;
 
 const NAV = [
-  { href: '/campus',          label: 'Inicio',    icon: <DashboardIcon /> },
-  { href: '/campus/courses',  label: 'Cursos',    icon: <SchoolIcon /> },
-  { href: '/campus/payments', label: 'Pagos',     icon: <ReceiptLongIcon /> },
-  { href: '/campus/profile',  label: 'Mi perfil', icon: <PersonIcon /> },
+  { href: '/campus', label: 'Inicio', icon: <DashboardIcon /> },
+  { href: '/campus/courses', label: 'Cursos', icon: <SchoolIcon /> },
+  { href: '/campus/payments', label: 'Pagos', icon: <ReceiptLongIcon /> },
+  { href: '/campus/profile', label: 'Mi perfil', icon: <PersonIcon /> },
 ];
 
-export default function CampusLayout({ children }: { children: React.ReactNode }) {
+export default function CampusLayout({
+  children,
+  modals,                 // 👈 recibe el slot paralelo
+}: {
+  children: ReactNode;
+  modals: ReactNode;      // 👈 tipado del slot
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
@@ -140,7 +146,23 @@ export default function CampusLayout({ children }: { children: React.ReactNode }
         <Toolbar />
 
         {/* Content */}
-        <Box sx={{ p: 3, flexGrow: 1 }}>{children}</Box>
+        <Box sx={{ p: 3, flexGrow: 1 }}>
+          {children}
+        </Box>
+      </Box>
+
+      {/* 🔳 Slot para los modales de /campus/@modals */}
+      <Box
+        id="modal-slot"
+        sx={{
+          position: 'fixed',
+          inset: 0,
+          pointerEvents: 'none', // el modal interior reactivará eventos
+          zIndex: (t) => t.zIndex.modal, // por encima del AppBar y Drawer
+        }}
+      >
+        {/* el contenido de cada página en /campus/@modals montará su propio <Modal/> */}
+        {modals}
       </Box>
     </Box>
   );

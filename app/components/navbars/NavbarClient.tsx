@@ -5,6 +5,7 @@ import { ChevronDown, LogOut, Settings, User } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthSession } from '@/app/auth/useAuthSession';
+import Link from 'next/link';
 
 type NavbarClientProps = {
   /** Ancho del Drawer permanente en px */
@@ -38,6 +39,9 @@ export default function NavbarClient({ drawerWidth = 240 }: NavbarClientProps) {
     >
       <Toolbar sx={{ minHeight: 64, display: 'flex', justifyContent: 'flex-end' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Link href="/campus/clientInfo">
+            prueba modal
+          </Link>
           <Button
             onClick={(e) => setAnchorEl(e.currentTarget)}
             variant="outlined"

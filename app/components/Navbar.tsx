@@ -33,6 +33,7 @@ export default function Navbar() {
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", gap: 3, mx: "auto" }}>
+        
           {links.map(({ label, href }) => (
             <Link key={label} href={href} passHref>
               <Typography

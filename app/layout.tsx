@@ -14,7 +14,7 @@ const nunitoSans = Nunito_Sans({ subsets: ["latin"], weight: ["300","400","500",
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="es" className={`${poppins.variable} ${nunitoSans.className}`}>
+    <html lang="es" className={`${poppins.variable} `}>
       <body>
         <AppThemeProvider>{children}</AppThemeProvider>
       </body>
