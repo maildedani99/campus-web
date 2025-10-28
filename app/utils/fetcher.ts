@@ -11,7 +11,7 @@ type AuthArg =
 function asBearerHeader(raw: string | undefined | null): string | null {
   if (!raw) return null;
   const t = String(raw).replace(/^["']|["']$/g, "").trim();
-  if (/^bearer\s+/i.test(t)) return t;          // ya viene con Bearer
+  if (/^bearer\s+/i.test(t)) return t; // ya viene con Bearer
   return `Bearer ${t}`;
 }
 
@@ -36,6 +36,40 @@ function buildUrl(pathOrUrl: string, method: string, body: any) {
   return `${base}${path}`;
 }
 
+// --- helper: manejar expiración de sesión de forma centralizada ---
+function handleAuthExpiry(status: number, msg: string | undefined) {
+  const m = (msg || "").toLowerCase();
+  const looksExpired =
+    status === 401 ||
+    status === 419 ||
+    m.includes("expired") ||
+    m.includes("unauthenticated") ||
+    m.includes("invalid token") ||
+    m.includes("token is invalid") ||
+    m.includes("signature") ||
+    m.includes("jwt");
+
+  if (looksExpired && typeof window !== "undefined") {
+    try {
+      // limpia storages básicos que usamos
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("auth:user");
+      // borra cookie demo si la usabas
+      document.cookie = "rb.token=; Path=/; Max-Age=0";
+    } catch {
+      /* no-op */
+    }
+    // redirige a sesión expirada con "next" para volver luego si procede
+    const next = encodeURIComponent(
+      `${window.location.pathname}${window.location.search}${window.location.hash}`
+    );
+    window.location.href = `/auth/session-expired?next=${next}`;
+  }
+}
+
 export async function fetchApiData(
   urlOrKey: any,
   method: string = "GET",
@@ -49,8 +83,11 @@ export async function fetchApiData(
 
   // auth puede ser string (token) o { token, user }
   const token =
-    typeof auth === "string" ? auth :
-    (auth && "token" in (auth as any) ? (auth as any).token : null);
+    typeof auth === "string"
+      ? auth
+      : auth && "token" in (auth as any)
+      ? (auth as any).token
+      : null;
 
   const tenantId =
     auth && typeof auth === "object" && (auth as any).user?.tenant_id
@@ -89,11 +126,31 @@ export async function fetchApiData(
   });
 
   let json: any = null;
-  try { json = await res.json(); } catch { /* sin cuerpo */ }
+  try {
+    json = await res.json();
+  } catch {
+    /* sin cuerpo */
+  }
+
+  // Manejo centralizado de expiración de token
+  if (!res.ok) {
+    const msg = json?.message || res.statusText || `HTTP ${res.status}`;
+    if (res.status === 401 || res.status === 419) {
+      handleAuthExpiry(res.status, String(msg));
+    }
+    const err: any = new Error(msg);
+    err.status = res.status;
+    err.errors = json?.errors;
+    // tu API puede envolver en { success:false }, preservamos body por si hace falta
+    err.body = json;
+    throw err;
+  }
 
   // Tu API: { success, message, data, errors, meta }
-  if (!res.ok || (json && json.success === false)) {
-    const msg = json?.message || res.statusText || `HTTP ${res.status}`;
+  if (json && json.success === false) {
+    const msg = json?.message || 'Request failed';
+    // también chequeamos expiración aquí por si tu backend responde success:false 401-like
+    handleAuthExpiry(401, String(msg));
     const err: any = new Error(msg);
     err.status = res.status;
     err.errors = json?.errors;

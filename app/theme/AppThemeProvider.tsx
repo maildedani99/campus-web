@@ -8,21 +8,9 @@ const theme = createTheme({
     fontFamily: "Nunito Sans, sans-serif",
   },
   palette: {
-    mode: "dark",
-    primary: {
-      main: "#D60001",
-    },
-    secondary: {
-      main: "#1976d2",
-    },
-    background: {
-      default: "#121212",
-      paper: "#1f1f1f",
-    },
-    text: {
-      primary: "#ffffff",
-      secondary: "#aaaaaa",
-    },
+    mode: "light",          // 👈 forzamos modo claro
+    primary: { main: "#D60001" },
+    // NO sobrescribimos text.* ni background.* para no “romper” el contraste
   },
 });
 

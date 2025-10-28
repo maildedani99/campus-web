@@ -146,193 +146,308 @@ export default function RegisterForm() {
     }
   };
 
-  return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: '#121212', display: 'flex', alignItems: 'center', justifyContent: 'center', px: 2, py: 6 }}>
-      <Box sx={{ width: '100%', maxWidth: { xs: '100%', sm: 600, md: 700, lg: 800 }, backgroundColor: '#1e1e1e', borderRadius: 3, p: { xs: 3, sm: 4 } }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-          <Image src="/logo.png" alt="Logo Rebirth" width={100} height={100} />
-        </Box>
-
-        <Typography variant="h6" sx={{ color: '#fff', fontWeight: 'bold' }}>Registro de usuario</Typography>
-
-        {topError && <Alert severity="error" sx={{ mt: 2 }}>{topError}</Alert>}
-        {successMsg && <Alert severity="success" sx={{ mt: 2 }}>{successMsg}</Alert>}
-
-        <form onSubmit={handleSubmit} noValidate>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="firstName" label="Nombre" fullWidth required
-                value={form.firstName} onChange={handleChange}
-                error={!!formErrors.firstName} helperText={formErrors.firstName}
-                InputLabelProps={{ style: { color: '#ccc' } }}
-                InputProps={{ style: { color: '#fff', backgroundColor: '#2a2a2a' } }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="lastName" label="Apellidos" fullWidth required
-                value={form.lastName} onChange={handleChange}
-                error={!!formErrors.lastName} helperText={formErrors.lastName}
-                InputLabelProps={{ style: { color: '#ccc' } }}
-                InputProps={{ style: { color: '#fff', backgroundColor: '#2a2a2a' } }}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                name="email" label="Correo electrónico" type="email" fullWidth required
-                value={form.email} onChange={handleChange}
-                error={!!formErrors.email} helperText={formErrors.email}
-                InputLabelProps={{ style: { color: '#ccc' } }}
-                InputProps={{ style: { color: '#fff', backgroundColor: '#2a2a2a' } }}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="password" label="Contraseña" type="password" fullWidth required
-                value={form.password} onChange={handleChange}
-                error={!!formErrors.password} helperText={formErrors.password}
-                InputLabelProps={{ style: { color: '#ccc' } }}
-                InputProps={{ style: { color: '#fff', backgroundColor: '#2a2a2a' } }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="repeatPassword" label="Repetir contraseña" type="password" fullWidth required
-                value={form.repeatPassword} onChange={handleChange}
-                error={!!formErrors.repeatPassword} helperText={formErrors.repeatPassword}
-                InputLabelProps={{ style: { color: '#ccc' } }}
-                InputProps={{ style: { color: '#fff', backgroundColor: '#2a2a2a' } }}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="phone" label="Teléfono" fullWidth required
-                value={form.phone} onChange={handleChange}
-                error={!!formErrors.phone} helperText={formErrors.phone}
-                InputLabelProps={{ style: { color: '#ccc' } }}
-                InputProps={{ style: { color: '#fff', backgroundColor: '#2a2a2a' } }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="dni" label="DNI/NIE" fullWidth required
-                value={form.dni} onChange={handleChange}
-                error={!!formErrors.dni} helperText={formErrors.dni}
-                InputLabelProps={{ style: { color: '#ccc' } }}
-                InputProps={{ style: { color: '#fff', backgroundColor: '#2a2a2a' } }}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="birthDate" label="Fecha de nacimiento" type="date" fullWidth required
-                value={form.birthDate} onChange={handleChange}
-                error={!!formErrors.birthDate} helperText={formErrors.birthDate}
-                InputLabelProps={{ shrink: true, style: { color: '#ccc' } }} // 👈 para que no solape
-                InputProps={{ style: { color: '#fff', backgroundColor: '#2a2a2a' } }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="province" label="Provincia" fullWidth required
-                value={form.province} onChange={handleChange}
-                error={!!formErrors.province} helperText={formErrors.province}
-                InputLabelProps={{ style: { color: '#ccc' } }}
-                InputProps={{ style: { color: '#fff', backgroundColor: '#2a2a2a' } }}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                name="address" label="Dirección" fullWidth required
-                value={form.address} onChange={handleChange}
-                error={!!formErrors.address} helperText={formErrors.address}
-                InputLabelProps={{ style: { color: '#ccc' } }}
-                InputProps={{ style: { color: '#fff', backgroundColor: '#2a2a2a' } }}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="city" label="Ciudad" fullWidth required
-                value={form.city} onChange={handleChange}
-                error={!!formErrors.city} helperText={formErrors.city}
-                InputLabelProps={{ style: { color: '#ccc' } }}
-                InputProps={{ style: { color: '#fff', backgroundColor: '#2a2a2a' } }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="postalCode" label="Código Postal" fullWidth required
-                value={form.postalCode} onChange={handleChange}
-                error={!!formErrors.postalCode} helperText={formErrors.postalCode}
-                InputLabelProps={{ style: { color: '#ccc' } }}
-                InputProps={{ style: { color: '#fff', backgroundColor: '#2a2a2a' } }}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                name="country" label="País" select fullWidth
-                value={form.country} onChange={handleChange}
-                error={!!formErrors.country} helperText={formErrors.country}
-                InputLabelProps={{ style: { color: '#ccc' } }}
-                InputProps={{ style: { color: '#fff', backgroundColor: '#2a2a2a' } }}
-              >
-                {COUNTRIES.map((c) => <MenuItem key={c} value={c}>{c}</MenuItem>)}
-              </TextField>
-            </Grid>
-
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="marketingConsent"
-                    checked={form.marketingConsent}
-                    onChange={handleChange}
-                    sx={{ color: '#fff' }}
-                  />
-                }
-                label={<Typography variant="body2" sx={{ color: '#ccc' }}>
-                  Acepto recibir comunicaciones comerciales (opcional)
-                </Typography>}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="termsAccepted"
-                    checked={form.termsAccepted}
-                    onChange={handleChange}
-                    sx={{ color: '#fff' }}
-                  />
-                }
-                label={<Typography variant="body2" sx={{ color: '#ccc' }}>
-                  Acepto los términos y condiciones
-                </Typography>}
-              />
-              {!!formErrors.termsAccepted && (
-                <Typography variant="caption" color="error">{formErrors.termsAccepted}</Typography>
-              )}
-            </Grid>
-
-            <Grid item xs={12}>
-              <Button
-                type="submit" variant="contained" fullWidth disabled={loading}
-                sx={{ mt: 2, backgroundColor: '#ef4444', color: '#fff', fontWeight: 'bold', ':hover': { backgroundColor: '#dc2626' } }}
-              >
-                {loading ? 'Procesando…' : 'Registrarse'}
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
+ return (
+  <Box
+    sx={{
+      minHeight: '100vh',
+      bgcolor: 'grey.100',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      px: 2,
+      py: 6,
+    }}
+  >
+    <Box
+      sx={{
+        width: '100%',
+        maxWidth: { xs: '100%', sm: 600, md: 700, lg: 800 },
+        bgcolor: 'background.paper',
+        borderRadius: 3,
+        p: { xs: 3, sm: 4 },
+        border: (t) => `1px solid ${t.palette.divider}`,
+        boxShadow: (t) => t.shadows[2],
+      }}
+    >
+      {/* Cabecera: título a la izq, logo a la dcha */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          mb: 3,
+        }}
+      >
+        <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary' }}>
+          Registro de usuario
+        </Typography>
+        <Image src="/logo-inverse.png" alt="Logo Rebirth" width={100} height={100} />
       </Box>
+
+      {topError && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {topError}
+        </Alert>
+      )}
+      {successMsg && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {successMsg}
+        </Alert>
+      )}
+
+      <form onSubmit={handleSubmit} noValidate>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="firstName"
+              label="Nombre"
+              fullWidth
+              required
+              value={form.firstName}
+              onChange={handleChange}
+              error={!!formErrors.firstName}
+              helperText={formErrors.firstName}
+              autoComplete="given-name"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="lastName"
+              label="Apellidos"
+              fullWidth
+              required
+              value={form.lastName}
+              onChange={handleChange}
+              error={!!formErrors.lastName}
+              helperText={formErrors.lastName}
+              autoComplete="family-name"
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              name="email"
+              label="Correo electrónico"
+              type="email"
+              fullWidth
+              required
+              value={form.email}
+              onChange={handleChange}
+              error={!!formErrors.email}
+              helperText={formErrors.email}
+              autoComplete="email"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="password"
+              label="Contraseña"
+              type="password"
+              fullWidth
+              required
+              value={form.password}
+              onChange={handleChange}
+              error={!!formErrors.password}
+              helperText={formErrors.password}
+              autoComplete="new-password"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="repeatPassword"
+              label="Repetir contraseña"
+              type="password"
+              fullWidth
+              required
+              value={form.repeatPassword}
+              onChange={handleChange}
+              error={!!formErrors.repeatPassword}
+              helperText={formErrors.repeatPassword}
+              autoComplete="new-password"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="phone"
+              label="Teléfono"
+              fullWidth
+              required
+              value={form.phone}
+              onChange={handleChange}
+              error={!!formErrors.phone}
+              helperText={formErrors.phone}
+              autoComplete="tel"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="dni"
+              label="DNI/NIE"
+              fullWidth
+              required
+              value={form.dni}
+              onChange={handleChange}
+              error={!!formErrors.dni}
+              helperText={formErrors.dni}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="birthDate"
+              label="Fecha de nacimiento"
+              type="date"
+              fullWidth
+              required
+              value={form.birthDate}
+              onChange={handleChange}
+              error={!!formErrors.birthDate}
+              helperText={formErrors.birthDate}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="province"
+              label="Provincia"
+              fullWidth
+              required
+              value={form.province}
+              onChange={handleChange}
+              error={!!formErrors.province}
+              helperText={formErrors.province}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              name="address"
+              label="Dirección"
+              fullWidth
+              required
+              value={form.address}
+              onChange={handleChange}
+              error={!!formErrors.address}
+              helperText={formErrors.address}
+              autoComplete="street-address"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="city"
+              label="Ciudad"
+              fullWidth
+              required
+              value={form.city}
+              onChange={handleChange}
+              error={!!formErrors.city}
+              helperText={formErrors.city}
+              autoComplete="address-level2"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="postalCode"
+              label="Código Postal"
+              fullWidth
+              required
+              value={form.postalCode}
+              onChange={handleChange}
+              error={!!formErrors.postalCode}
+              helperText={formErrors.postalCode}
+              autoComplete="postal-code"
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              name="country"
+              label="País"
+              select
+              fullWidth
+              value={form.country}
+              onChange={handleChange}
+              error={!!formErrors.country}
+              helperText={formErrors.country}
+            >
+              {COUNTRIES.map((c) => (
+                <MenuItem key={c} value={c}>
+                  {c}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          {/* ❌ Eliminado: checkbox de marketingConsent */}
+
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="termsAccepted"
+                  checked={form.termsAccepted}
+                  onChange={handleChange}
+                />
+              }
+              label={<Typography variant="body2">Acepto los términos y condiciones</Typography>}
+            />
+            {!!formErrors.termsAccepted && (
+              <Typography variant="caption" color="error">
+                {formErrors.termsAccepted}
+              </Typography>
+            )}
+          </Grid>
+
+          <Grid item xs={12}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              disabled={loading}
+              sx={{ mt: 1 }}
+            >
+              {loading ? 'Procesando…' : 'Registrarse'}
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+
+      {/* CTA para volver al login */}
+      <Typography
+        variant="body1"
+        sx={{
+          mt: 4,
+          textAlign: 'center',
+          color: 'text.primary',
+          fontWeight: 500,
+        }}
+      >
+        ¿Ya tienes cuenta?{' '}
+        <a
+          href="/auth/login"
+          style={{
+            color: '#D60001',
+            fontWeight: 700,
+            textDecoration: 'none',
+            transition: 'color 0.25s ease',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = '#b91c1c')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = '#D60001')}
+        >
+          Inicia sesión
+        </a>
+      </Typography>
     </Box>
-  );
+  </Box>
+);
+
 }
