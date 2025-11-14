@@ -1,7 +1,7 @@
 // app/layout.tsx
 import './globals.css'
 import type { ReactNode } from 'react'
-import {  Poppins, Roboto } from "next/font/google"
+import {  Poppins } from "next/font/google"
 import AppThemeProvider from './theme/AppThemeProvider';
 
 export const poppins = Poppins({
