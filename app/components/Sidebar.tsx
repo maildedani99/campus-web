@@ -177,7 +177,7 @@ function SidebarContent({ menu, onLeafClick }: { menu: MenuItem[]; onLeafClick?:
 
       {/* Logout */}
       <Divider sx={{ borderColor: "grey.800" }} />
-      <form action={Logout}>
+      <form >
         <List disablePadding>
           <ListItem disablePadding>
             <ListItemButton component="button" type="submit" sx={{ pl: 1.5, color: "grey.100",
