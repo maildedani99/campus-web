@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import Mustache from "mustache";
-import { prisma } from "../../../lib/prisma";
 
 function buildRenderCtxFromUser(user: any) {
   return {
