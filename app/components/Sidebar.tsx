@@ -19,8 +19,7 @@ import {
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import LogoutIcon from "@mui/icons-material/Logout";
-import type { MenuItem } from "@/config/menu";
-import { logout } from "@/lib/auth";
+import { MenuItem } from "../data/menu";
 
 export const DRAWER_WIDTH = 260;
 
@@ -178,7 +177,7 @@ function SidebarContent({ menu, onLeafClick }: { menu: MenuItem[]; onLeafClick?:
 
       {/* Logout */}
       <Divider sx={{ borderColor: "grey.800" }} />
-      <form action={logout}>
+      <form action={Logout}>
         <List disablePadding>
           <ListItem disablePadding>
             <ListItemButton component="button" type="submit" sx={{ pl: 1.5, color: "grey.100",
