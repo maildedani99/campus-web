@@ -10,6 +10,8 @@ export type AppUser = {
   role?: 'admin' | 'teacher' | 'client';
   isActive?: boolean;
     tutor_id?: number | null;
+      avatarUrl?: string | null;
+
 
 };
 
