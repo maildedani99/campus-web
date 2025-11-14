@@ -9,6 +9,8 @@ export type AppUser = {
   lastName?: string;
   role?: 'admin' | 'teacher' | 'client';
   isActive?: boolean;
+    tutor_id?: number | null;
+
 };
 
 const USER_KEYS = ['auth:user', 'user'];
