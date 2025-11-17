@@ -1,7 +1,9 @@
 // Firma compatible: fetcher(url, method="GET", body=null, auth=null)
 // También compatible con SWR key array: fetcher([url, method, body, auth])
 
-const API_BASE = (process.env.NEXT_PUBLIC_API_ROUTE || "").replace(/\/+$/, "");
+const API_BASE =
+  (process.env.NEXT_PUBLIC_API_ROUTE || "https://rebirth-api-8d4fa94456e3.herokuapp.com/api")
+    .replace(/\/+$/, "");
 
 type AuthArg =
   | null
