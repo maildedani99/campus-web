@@ -31,14 +31,30 @@ function norm(val?: unknown) {
   return String(val ?? '').trim().toLowerCase();
 }
 
+// ✅ FUNCIÓN REPARADA — mínimo cambio sin tocar nada más
 function deriveProgressFromUser(u: any): Progress {
-  const deposit = norm(u?.depositStatus);
-  const finalPay = norm(u?.finalPayment);
-  const hasPaid =
-    deposit === 'paid' ||
-    deposit === 'completed' ||
-    finalPay === 'paid' ||
-    finalPay === 'completed';
+  const rawDeposit = u?.depositStatus;
+  const rawFinalPay = u?.finalPayment;
+
+  const depositNorm = norm(rawDeposit);
+  const finalNorm = norm(rawFinalPay);
+
+  // Consideramos pagado si llega true, 1, "1", "paid", "completed"
+  const depositPaid =
+    rawDeposit === true ||
+    rawDeposit === 1 ||
+    rawDeposit === "1" ||
+    depositNorm === "paid" ||
+    depositNorm === "completed";
+
+  const finalPaid =
+    rawFinalPay === true ||
+    rawFinalPay === 1 ||
+    rawFinalPay === "1" ||
+    finalNorm === "paid" ||
+    finalNorm === "completed";
+
+  const hasPaid = depositPaid || finalPaid;
 
   const lopdAccepted = Boolean(
     u?.marketingConsent === 1 || u?.marketingConsent === true
@@ -106,7 +122,6 @@ export default function InactivePage() {
     router.push('/campus/contracts/course');
   };
 
-  // 🎨 Tarjeta visual para cada paso
   const StepCard = ({
     icon,
     title,
@@ -251,7 +266,6 @@ export default function InactivePage() {
           </Alert>
         )}
 
-        {/* Cards de progreso */}
         <Stack spacing={2}>
           <StepCard
             icon={<CreditCard size={24} />}
