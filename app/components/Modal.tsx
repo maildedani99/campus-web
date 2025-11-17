@@ -11,7 +11,11 @@ type Props = {
   maxWidth?: number | string;
 };
 
-export default function Modal({ children, width = 'min(900px, 92vw)', maxWidth = '90vw' }: Props) {
+export default function Modal({
+  children,
+  width = 'min(900px, 92vw)',
+  maxWidth = '90vw',
+}: Props) {
   const router = useRouter();
 
   return (
@@ -27,8 +31,8 @@ export default function Modal({ children, width = 'min(900px, 92vw)', maxWidth =
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          bgcolor: '#111',            // panel oscuro para tu tema
-          color: '#fff',
+          bgcolor: 'background.paper',   // panel claro
+          color: 'text.primary',
           boxShadow: 24,
           borderRadius: 2,
           p: 3,
@@ -42,12 +46,16 @@ export default function Modal({ children, width = 'min(900px, 92vw)', maxWidth =
           aria-label="Cerrar"
           onClick={() => router.back()}
           size="small"
-          sx={{ position: 'absolute', top: 8, right: 8, color: '#bbb' }}
+          sx={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            color: 'text.secondary',
+          }}
         >
           <CloseIcon fontSize="small" />
         </IconButton>
 
-        {/* 👇 MUY IMPORTANTE */}
         {children}
       </Box>
     </MuiModal>

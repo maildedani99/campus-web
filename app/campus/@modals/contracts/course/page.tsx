@@ -1,6 +1,6 @@
 'use client';
 
-import { Stack, Typography } from '@mui/material';
+import { Stack, Typography, Box } from '@mui/material';
 import { COURSE_TEMPLATE } from '../templates/course';
 import { useAuthSession } from '@/app/auth/useAuthSession';
 import ContractTemplateRenderer from '@/app/components/ContractTemplateRenderer';
@@ -39,7 +39,7 @@ export default function CourseContractPage() {
       phone: (user as any)?.phone ?? '',
     },
     consents: {
-      marketing: 'NO', // o 'SÍ' si lo capturas
+      marketing: 'NO',
     },
     doc: {
       date: new Date().toLocaleDateString(),
@@ -49,12 +49,37 @@ export default function CourseContractPage() {
 
   return (
     <Modal>
-    <Stack spacing={2} sx={{ p: 3 }}>
-      <Typography variant="h6">Contrato del curso</Typography>
-      <ContractTemplateRenderer template={COURSE_TEMPLATE} data={data} />
-      <ContractAcceptBlock onAccepted={() => alert("Se ha aceptado el contrato")} />
+      <Stack
+        spacing={2}
+        sx={{
+          p: 3,
+          bgcolor: 'background.paper',
+          color: 'text.primary',
+        }}
+      >
+        <Typography variant="h6">Contrato del curso</Typography>
 
-    </Stack>
+        {/* 👇 Forzamos estilo claro para TODO el contenido del contrato */}
+        <Box
+          sx={(theme) => ({
+            bgcolor: 'background.paper',
+            color: theme.palette.text.primary,
+            lineHeight: 1.6,
+            fontSize: 14,
+            // todo lo que pinte dentro se verá oscuro sobre fondo claro
+            '& *': {
+              color: `${theme.palette.text.primary} !important`,
+              backgroundColor: 'transparent !important',
+            },
+          })}
+        >
+          <ContractTemplateRenderer template={COURSE_TEMPLATE} data={data} />
+        </Box>
+
+        <ContractAcceptBlock
+          onAccepted={() => alert('Se ha aceptado el contrato')}
+        />
+      </Stack>
     </Modal>
   );
 }
