@@ -186,11 +186,11 @@ export default function LoginPage() {
                 </a>
               </Typography>
 
-        <Typography variant="body2" sx={{ mt: 1, textAlign: 'center', color: 'text.secondary' }}>
+      {/*   <Typography variant="body2" sx={{ mt: 1, textAlign: 'center', color: 'text.secondary' }}>
           <Link href="/forgot-password" style={{ color: 'inherit', textDecoration: 'underline' }}>
             ¿Olvidaste tu contraseña?
           </Link>
-        </Typography>
+        </Typography> */}
       </Box>
     </Box>
   );

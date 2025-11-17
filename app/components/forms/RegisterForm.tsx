@@ -21,8 +21,6 @@ type RegisterFormState = {
   province: string;      // 👈 nuevo
   birthDate: string;     // 👈 nuevo (yyyy-mm-dd)
   dni: string;
-  termsAccepted: boolean;
-  marketingConsent: boolean; // 👈 opcional
 };
 
 type FieldErrors = Partial<Record<keyof RegisterFormState | 'password_confirmation', string>>;
@@ -41,8 +39,6 @@ const initialState: RegisterFormState = {
   province: '',          // 👈
   birthDate: '',         // 👈
   dni: '',
-  termsAccepted: false,
-  marketingConsent: false, // 👈
 };
 
 const COUNTRIES = ['España', 'Argentina', 'México'];
@@ -63,88 +59,90 @@ export default function RegisterForm() {
   };
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (loading) return;
-    setTopError('');
-    setSuccessMsg('');
-    setFormErrors({});
+  e.preventDefault();
+  if (loading) return;
+  setTopError('');
+  setSuccessMsg('');
+  setFormErrors({});
 
-    // Validaciones rápidas en cliente
-    if (form.password !== form.repeatPassword) {
-      setFormErrors((p) => ({ ...p, repeatPassword: 'Las contraseñas no coinciden' }));
+  // Validaciones rápidas en cliente
+  if (form.password !== form.repeatPassword) {
+    setFormErrors((p) => ({ ...p, repeatPassword: 'Las contraseñas no coinciden' }));
+    return;
+  }
+  
+
+  setLoading(true);
+  try {
+    const api = process.env.NEXT_PUBLIC_API_ROUTE;
+    if (!api) throw new Error('Falta NEXT_PUBLIC_API_ROUTE');
+
+    const payload = {
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      email: form.email.trim().toLowerCase(),
+      password: form.password,
+      password_confirmation: form.repeatPassword, // Laravel
+      phone: form.phone.replace(/\s+/g, ''),
+      address: form.address.trim(),
+      city: form.city.trim(),
+      postalCode: form.postalCode.trim(),
+      country: form.country,
+      province: form.province.trim(),
+      birthDate: form.birthDate,
+      dni: form.dni.trim().toUpperCase(),
+    };
+
+    const res = await fetch(`${api}/auth/register`, {
+      method: 'POST',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    const json = await res.json().catch(() => null);
+
+    if (!res.ok || (json && json.success === false)) {
+      if (res.status === 422 && json?.errors && typeof json.errors === 'object') {
+        const fe: FieldErrors = {};
+        Object.entries(json.errors).forEach(([k, v]) => {
+          const msg = Array.isArray(v) ? String(v[0]) : String(v);
+          if (k === 'password') fe.password = msg;
+          else if (k === 'password_confirmation') fe.repeatPassword = msg;
+          else if (k in initialState) (fe as any)[k] = msg;
+        });
+        setFormErrors(fe);
+        setTopError(json?.message || 'Datos inválidos');
+      } else {
+        const msg = json?.message || 'Error en el registro';
+        setTopError(msg);
+      }
       return;
     }
-    if (!form.termsAccepted) {
-      setFormErrors((p) => ({ ...p, termsAccepted: 'Debes aceptar los términos' }));
-      return;
-    }
 
-    setLoading(true);
-    try {
-      const api = process.env.NEXT_PUBLIC_API_ROUTE;
-      if (!api) throw new Error('Falta NEXT_PUBLIC_API_ROUTE');
+    // Si quisieras, aquí podrías leer token/user, pero NO iniciamos sesión automática
+    // const token = json?.data?.token ?? json?.token;
+    // const user  = json?.data?.user  ?? json?.user;
+    // if (token && user) {
+    //   sessionStorage.setItem('token', token);
+    //   sessionStorage.setItem('user', JSON.stringify(user));
+    // }
 
-      const payload = {
-        firstName: form.firstName.trim(),
-        lastName: form.lastName.trim(),
-        email: form.email.trim().toLowerCase(),
-        password: form.password,
-        password_confirmation: form.repeatPassword, // Laravel
-        phone: form.phone.replace(/\s+/g, ''),
-        address: form.address.trim(),
-        city: form.city.trim(),
-        postalCode: form.postalCode.trim(),
-        country: form.country,
-        province: form.province.trim(),     // 👈 nuevo
-        birthDate: form.birthDate,          // 👈 nuevo (yyyy-mm-dd)
-        dni: form.dni.trim().toUpperCase(),
-        marketingConsent: form.marketingConsent, // 👈 opcional
-      };
+    // 👇 Nuevo mensaje pensado para verificación de email
+    setSuccessMsg(
+      'Registro completado. Te hemos enviado un email de verificación. ' +
+        'Revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.'
+    );
+    setForm(initialState);
 
-      const res = await fetch(`${api}/auth/register`, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+    // Si quieres, puedes redirigir a una página tipo /auth/check-email:
+    // window.location.href = '/auth/check-email';
+  } catch (err: any) {
+    setTopError(err?.message || 'Ocurrió un error al registrar.');
+  } finally {
+    setLoading(false);
+  }
+};
 
-      const json = await res.json().catch(() => null);
-
-      if (!res.ok || (json && json.success === false)) {
-        if (res.status === 422 && json?.errors && typeof json.errors === 'object') {
-          const fe: FieldErrors = {};
-          Object.entries(json.errors).forEach(([k, v]) => {
-            const msg = Array.isArray(v) ? String(v[0]) : String(v);
-            if (k === 'password') fe.password = msg;
-            else if (k === 'password_confirmation') fe.repeatPassword = msg;
-            else if (k in initialState) (fe as any)[k] = msg;
-          });
-          setFormErrors(fe);
-          setTopError(json?.message || 'Datos inválidos');
-        } else {
-          const msg = json?.message || 'Error en el registro';
-          setTopError(msg);
-        }
-        return;
-      }
-
-      const token = json?.data?.token ?? json?.token;
-      const user  = json?.data?.user  ?? json?.user;
-
-      if (token && user) {
-        sessionStorage.setItem('token', token);
-        sessionStorage.setItem('user', JSON.stringify(user));
-      }
-
-      setSuccessMsg('Registro completado. ¡Bienvenido/a!');
-      setForm(initialState);
-      // Redirección si quieres:
-      // window.location.href = '/campus';
-    } catch (err: any) {
-      setTopError(err?.message || 'Ocurrió un error al registrar.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
  return (
   <Box
@@ -386,25 +384,7 @@ export default function RegisterForm() {
             </TextField>
           </Grid>
 
-          {/* ❌ Eliminado: checkbox de marketingConsent */}
-
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="termsAccepted"
-                  checked={form.termsAccepted}
-                  onChange={handleChange}
-                />
-              }
-              label={<Typography variant="body2">Acepto los términos y condiciones</Typography>}
-            />
-            {!!formErrors.termsAccepted && (
-              <Typography variant="caption" color="error">
-                {formErrors.termsAccepted}
-              </Typography>
-            )}
-          </Grid>
+         
 
           <Grid item xs={12}>
             <Button
