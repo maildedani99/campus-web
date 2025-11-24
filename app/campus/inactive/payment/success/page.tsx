@@ -18,7 +18,7 @@ function PaymentSuccessInner() {
 
     // Aquí podrías llamar a una API si quisieras validar algo con sessionId.
     // Por ahora, simplemente redirigimos al campus cuando hay sessionId.
-    router.replace('/campus');
+    router.replace('/campus/inactive');
   }, [sessionId, router]);
 
   return (
