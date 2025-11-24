@@ -1,84 +1,83 @@
 export const COURSE_TEMPLATE = `
-CONTRATO DE PREVIA ACEPTACIÓN DE
-PAGO Y COMPROMISO DE ASISTENCIA
+<h2 style="margin-bottom: 16px;">CONTRATO DEL CURSO</h2>
 
-1. Partes del Contrato
-Este contrato se celebra entre:
-Proveedor del Servicio: {{provider.name}} (en adelante, "Proveedor")
-Cliente: {{client.firstName}} {{client.lastName}} con DNI {{client.dni}} (en adelante, "Cliente")
+<p><strong>CONTRATO DE PREVIA ACEPTACIÓN DE PAGO Y COMPROMISO DE ASISTENCIA</strong></p>
 
-2. Objeto del Contrato
-El objeto de este contrato es regular las condiciones de pago anticipado, compromiso de
-asistencia y participación en el programa {{program.name}} ofrecido por el Proveedor.
+<p><strong>1. Partes del contrato</strong><br/>
+Este contrato se celebra entre:  
+<strong>Proveedor del Servicio:</strong> (en adelante, “Proveedor”)  
+<strong>Cliente:</strong> con DNI (en adelante, “Cliente”).</p>
 
-3. Pago Anticipado
-El Cliente se compromete a realizar el pago completo del programa {{program.name}} antes del
-inicio del mismo. El importe del programa es de {{program.totalAmount}} € (impuestos incluidos).
-Este pago se realizará dividido en dos partes.
-{{program.depositAmount}}€ en concepto de reserva de la plaza
-{{program.balanceAmount}}€ restantes justo antes de comenzar el programa.
-En el caso de cancelar la reserva con menos de {{program.refundDays}} días de antelación del comienzo del
-programa, ésta no será reembolsada al cliente en ningún caso, es decir, supondrá la pérdida del
-importe de la misma.
+<p><strong>2. Objeto del Contrato</strong><br/>
+El objeto de este contrato es regular las condiciones de pago anticipado, compromiso de asistencia y participación en el programa ofrecido por el Proveedor.</p>
 
-4. Compromiso de Asistencia
-El Cliente se compromete a:
-Asistir a la reunión inicial del programa.
-Asistir a las reuniones semanales programadas.
-Participar activamente y cumplir con la mayoría de las actividades propuestas en el
-programa.
-La no asistencia en repetidas ocasiones sin justificación alguna supondrá la expulsión
-directa del grupo y de la plataforma.
-La no ejecución reiterada de las “tareas” a realizar, previo aviso de los terapeutas,
-supondrá la directa expulsión del grupo y de la plataforma, aceptando el cliente el no
-reembolso de la cantidad pagada. Eximiendo de toda responsabilidad al Proveedor
+<p><strong>3. Pago Anticipado</strong><br/>
+El Cliente se compromete a realizar el pago completo del programa antes del inicio del mismo. El importe del programa es de € (impuestos incluidos). Este pago se realizará dividido en dos partes: un concepto de reserva de la plaza y el resto justo antes de comenzar el programa.</p>
 
-5. Descargo de Responsabilidad
-El Cliente reconoce y acepta que:
-Los resultados del programa {{program.name}} pueden variar dependiendo de la
-participación y el esfuerzo individual.
-El Proveedor no garantiza resultados específicos y no se responsabiliza por la falta de
-consecución de los objetivos personales del Cliente.
+<p><strong>Política de cancelación:</strong><br/>
+En caso de cancelar la reserva con menos de 3 días de antelación, no será reembolsado bajo ningún concepto.</p>
 
-Fecha y firma
-NOMBRE: {{client.firstName}}
-APELLIDOS: {{client.lastName}}
-NUMERO DNI: {{client.dni}}
-FECHA DE NACIMIENTO: {{client.birthDate}}
-DIRECCIÓN: {{client.address}}
-C.P. : {{client.postalCode}}
-CIUDAD: {{client.city}}
-PROVINCIA: {{client.province}}
-CORREO ELECTRÓNICO: {{client.email}}
-TELÉFONO MÓVIL: {{client.phone}}
+<p><strong>4. Compromiso de Asistencia</strong><br/>
+El Cliente se compromete a:  
+• Asistir a la reunión inicial.  
+• Asistir a las reuniones semanales programadas.  
+• Participar activamente y cumplir con las tareas asignadas.  
+• No ausentarse sin justificación repetidamente.</p>
 
-Datos del responsable del tratamiento:
-Identidad: {{provider.legalName}} - NIF: {{provider.nif}}
-Dirección postal: {{provider.address}}
-Teléfono: {{provider.phone}}
-Correo electrónico: {{provider.email}}
+<p><strong>Nota:</strong> El incumplimiento reiterado puede suponer expulsión del grupo sin reembolso.</p>
 
-“En REBIRTH- EL METODO tratamos la información que nos facilita con el fin de prestarles el servicio
-solicitado y realizar su facturación. Los datos proporcionados se conservarán mientras se mantenga
-la relación comercial o durante el tiempo necesario para cumplir con las obligaciones legales y
-atender las posibles responsabilidades que pudieran derivar del cumplimiento de la finalidad para
-la que los datos fueron recabados. Los datos no se cederán a terceros salvo en los casos en que
-exista una obligación legal. Usted tiene derecho a obtener información sobre si en REBIRTH- EL
-METODO estamos tratando sus datos personales, por lo que puede ejercer sus derechos de acceso,
-rectificación, supresión y portabilidad de datos y oposición y limitación a su tratamiento ante
-REBIRTH- EL METODO, {{provider.address}} o en la dirección electrónica
-{{provider.email}}, identificándose suficientemente en su solicitud por medios
-electrónicos o, en su defecto, mediante solicitud debidamente firmada. No obstante, si el
-responsable del tratamiento tuviese dudas razonables en relación con la identidad de la persona
-física que cursa la solicitud podrá solicitar que se facilite información adicional necesaria para
-confirmar su identidad. Asimismo, y especialmente si considera que no ha obtenido satisfacción
-plena en el ejercicio de sus derechos, podrá presentar una reclamación ante la autoridad nacional
-de control dirigiéndose a estos efectos a la Agencia Española de Protección de Datos, C/ Jorge
-Juan, 6 – 28001 Madrid.
+<p><strong>5. Descargo de Responsabilidad</strong><br/>
+El Cliente reconoce y acepta que los resultados dependen de su participación y esfuerzo. El Proveedor no garantiza resultados específicos y no se responsabiliza por el incumplimiento de los objetivos del Cliente.</p>
 
-Asimismo, solicitamos su autorización para ofrecerle productos y servicios
-relacionados con los contratados y fidelizarle como cliente.”
-TRATAMIENTO DE DATOS DEL CLIENTE: {{consents.marketing}}
-SI / NO
-Fecha y firma: {{doc.date}} · Lugar: {{doc.place}}
+<hr style="margin: 24px 0;" />
+
+<h3>DATOS DEL CLIENTE</h3>
+
+<p><strong>NOMBRE:</strong> {{data.client.firstName}} {{data.client.lastName}}<br/>
+<strong>NÚMERO DNI:</strong> {{data.client.dni}}<br/>
+<strong>FECHA DE NACIMIENTO:</strong> {{data.client.birthDate}}<br/>
+<strong>DIRECCIÓN:</strong> {{data.client.address}}<br/>
+<strong>C.P.:</strong> {{data.client.postalCode}}<br/>
+<strong>CIUDAD:</strong> {{data.client.city}}<br/>
+<strong>PROVINCIA:</strong> {{data.client.province}}<br/>
+<strong>CORREO ELECTRÓNICO:</strong> {{data.client.email}}<br/>
+<strong>TELÉFONO:</strong> {{data.client.phone}}</p>
+
+<hr style="margin: 24px 0;" />
+
+<h3>DATOS DEL RESPONSABLE DEL TRATAMIENTO</h3>
+
+<p><strong>Identidad:</strong> {{data.provider.legalName}}<br/>
+<strong>NIF:</strong> {{data.provider.nif}}<br/>
+<strong>Dirección postal:</strong> {{data.provider.address}}<br/>
+<strong>Teléfono:</strong> {{data.provider.phone}}<br/>
+<strong>Correo electrónico:</strong> {{data.provider.email}}</p>
+
+<hr style="margin: 24px 0;" />
+
+<h3>TRATAMIENTO DE DATOS</h3>
+
+<p>
+“En REBIRTH - EL MÉTODO tratamos la información que nos facilita con el fin de prestarles el servicio solicitado y realizar su facturación.  
+Los datos proporcionados se conservarán mientras se mantenga la relación comercial o durante el tiempo necesario para cumplir obligaciones legales y atender las posibles responsabilidades derivadas.
+</p>
+
+<p>
+Los datos no se cederán a terceros salvo obligación legal.  
+Usted puede ejercer sus derechos de acceso, rectificación, supresión, portabilidad, oposición y limitación mediante solicitud escrita dirigida a {{data.provider.email}} o a {{data.provider.address}}.
+</p>
+
+<p>
+Si no está satisfecho con la respuesta del responsable del tratamiento, puede presentar una reclamación ante la Agencia Española de Protección de Datos (C/ Jorge Juan, 6 - 28001 Madrid).
+</p>
+
+<hr style="margin: 24px 0;" />
+
+<h3>AUTORIZACIÓN ADICIONAL</h3>
+<p>
+<strong>TRATAMIENTO DE DATOS DEL CLIENTE:</strong> SI / NO<br/>
+<strong>Fecha y firma:</strong><br/>
+<strong>Lugar:</strong> {{data.doc.place}}, {{data.doc.date}}
+</p>
+
 `;
