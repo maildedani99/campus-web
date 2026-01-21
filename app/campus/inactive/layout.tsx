@@ -1,6 +1,5 @@
 export default function InactiveLayout({
   children,
-  modals,
 }: {
   children: React.ReactNode;
   modals: React.ReactNode;
@@ -8,7 +7,6 @@ export default function InactiveLayout({
   return (
     <>
       {children}
-      {modals}
     </>
   );
 }
